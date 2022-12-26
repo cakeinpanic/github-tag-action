@@ -16,12 +16,12 @@ type Tag = {
 };
 
 export function getOctokitSingleton() {
-  if (octokitSingleton) {
-    return octokitSingleton;
-  }
-  const githubToken = core.getInput('github_token');
-  octokitSingleton = getOctokit(githubToken);
-  return octokitSingleton;
+	if (octokitSingleton) {
+		return octokitSingleton;
+	}
+	const githubToken = core.getInput('github_token');
+	octokitSingleton = getOctokit(githubToken);
+	return octokitSingleton;
 }
 
 /**
@@ -61,6 +61,14 @@ export async function compareCommits(baseRef: string, headRef: string) {
 		base: baseRef,
 		head: headRef,
 	});
+	for (let com of commits.data.commits) {
+		const c = await octokit.git.getCommit({
+			...context.repo,
+			commit_sha: com.sha
+		});
+		console.log('hello', JSON.stringify(c));
+	}
+
 	console.log(JSON.stringify(commits.data.commits));
 	return commits.data.commits;
 }
